@@ -243,6 +243,14 @@ namespace SymbolicLinkCreator
             }
         }
 
+        public static int CheckIfTxtFileIsOpen()
+        {
+
+
+            Process[] processes = Process.GetProcessesByName("notepad");
+            return processes.Count();
+
+        }
 
         public static condition checkCurrentProcess(string filePath)
         {
