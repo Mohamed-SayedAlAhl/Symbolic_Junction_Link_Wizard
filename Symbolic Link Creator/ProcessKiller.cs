@@ -440,78 +440,16 @@ namespace SymbolicLinkCreator
         {
             switch (fileExtension.ToLower()) // Convert to lowercase for case-insensitivity
             {
-                case ".doc":
-                case ".docx":
-                case ".dot":
-                case ".dotx":
-                case ".rtf":
-                case ".odt":
-                    return "Microsoft Word";
-
-                case ".xls":
-                case ".xlsx":
-                case ".xlsm":
-                case ".xlt":
-                case ".xltx":
-                case ".xla":
-                case ".xlam":
-                case ".ods":
-                    return "Microsoft Excel";
-
-                case ".ppt":
-                case ".pptx":
-                case ".pptm":
-                case ".pot":
-                case ".potx":
-                case ".pps":
-                case ".ppsx":
-                case ".odp":
-                case ".sldx":
-                case ".sldm":
-                    return "Microsoft PowerPoint";
-
-                case ".msg":
-                case ".pst":
-                case ".ost":
-                case ".eml":
-                    return "Microsoft Outlook";
-
-                case ".accdb":
-                case ".mdb":
-                case ".accde":
-                case ".accdr":
-                case ".accdt":
-                case ".laccdb":
-                    return "Microsoft Access";
-
-                case ".one":
-                case ".onetoc2":
-                    return "Microsoft OneNote";
-
-                case ".vsd":
-                case ".vsdx":
-                case ".vdx":
-                case ".vdw":
-                    return "Microsoft Visio";
-
-                case ".pub":
-                    return "Microsoft Publisher";
-
-                case ".mpp":
-                case ".mpt":
-                    return "Microsoft Project";
-
-                case ".xsn":
-                    return "Microsoft InfoPath";
-
-                case ".thmx":
-                    return "Microsoft Office Theme";
-
                 case ".jpg":
                 case ".jpeg":
                 case ".png":
                 case ".gif":
                     return "Image Viewer"; // Generic image viewer
+                case ".mp4":
+                case ".ts":
+                    return "Video player";
+                case ".mp3":
+                    return "Audio player";
 
                 case ".zip":
                 case ".rar":
@@ -522,13 +460,62 @@ namespace SymbolicLinkCreator
                     return "Web Browser"; // Web files
 
 
-
                 default:
                     return "Unknown"; // No associated application
             }
         }
 
+        private static string GetOfficeApplicationNames(string ProcessName)
+        {
+            switch (ProcessName.ToLower()) // Convert to lowercase for case-insensitivity
+            {
+                case "winword":
+                    return "Microsoft Word";
+                case "excel":
+                    return "Microsoft Excel";
+                case "powerpnt":
+                    return "Microsoft PowerPoint";
+                case "outlook":
+                    return "Microsoft Outlook";
+                case "msaccess":
+                    return "Microsoft Access";
+                case "onenote":
+                    return "Microsoft OneNote";
+                case "visio":
+                    return "Microsoft Visio";
+                case "mspub":
+                    return "Microsoft Publisher";
+                case "winproj":
+                    return "Microsoft Project";
+                case "infopath":
+                    return "Microsoft InfoPath";
+                case "groove":
+                    return "Microsoft Groove";
+                case "lync":
+                case "skypeforbusiness":
+                    return "Microsoft Skype for Business";
+                case "frontpg":
+                    return "Microsoft FrontPage";
+                case "ois":
+                    return "Microsoft Office Picture Manager";
+                case "offdiag":
+                    return "Microsoft Office Diagnostics";
+                case "mstore":
+                    return "Microsoft Clip Organizer";
+                case "msqdoc":
+                    return "Microsoft Office Document Imaging";
+                case "communicator":
+                    return "Microsoft Office Communicator";
+                case "msouc":
+                    return "Microsoft Office Upload Center";
+                case "teams":
+                    return "Microsoft Teams";
 
+
+                default:
+                    return "Unknown"; // No associated office application
+            }
+        }
 
         private static string GetApplicationName(Process process, string filePath)
         {
@@ -542,12 +529,19 @@ namespace SymbolicLinkCreator
             }
             catch
             {
-
-                string appName = GetApplicationNameForExtension(Path.GetExtension(filePath).ToLowerInvariant());
+                string appName = GetOfficeApplicationNames(process.ProcessName);
                 if (appName != "Unknown")
                     return appName;
                 else
-                    return "";
+                {
+                    appName = GetApplicationNameForExtension(Path.GetExtension(filePath).ToLowerInvariant());
+                    if (appName != "Unknown")
+                        return appName;
+                    else
+                        return "";
+                }
+
+
             }
         }
         // Kills the process by its PID
